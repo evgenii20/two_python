@@ -1,0 +1,9 @@
+key1:
+- subkey1
+- subkey2
+- subkey3
+key2: 4
+key3:
+  1€: '342'
+  2₱: '7645'
+  3₤: '932'
