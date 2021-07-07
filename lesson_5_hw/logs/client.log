@@ -1,0 +1,3 @@
+2021-07-07 18:27:19,125 CRITICAL client_config.py Кртиическое сообщение 
+2021-07-07 18:27:19,125 ERROR client_config.py Сообщение об ошибке 
+2021-07-07 18:27:19,125 WARNING client_config.py Предупреждение
