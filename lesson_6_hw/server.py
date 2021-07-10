@@ -6,7 +6,7 @@ import socket
 # импортируем объект logger для клиента, при этом не надо дополнительно прописывать объект-логгер в 14-й строке
 from logs.server_log_config import SERVER_LOGGER
 # импорт модуля utils
-from utils import load_configs, get_message, send_message
+from utils import load_configs, get_message, send_message, log
 
 # объявдяем словарь для конфигурации
 CONFIGS = dict()
@@ -16,6 +16,7 @@ CONFIGS = dict()
 # в дальнейшем вызываем:
 # SERVER_LOGGER.critical('Кртиическое сообщение')
 
+@log
 def handle_response(message):
     # def handle_response(message, CONFIGS):
     """Статус доставки сообщения"""
@@ -32,7 +33,7 @@ def handle_response(message):
         CONFIGS.get('ERROR'): 'Bad Request'
     }
 
-
+@log
 def main():
     # блок запуска сервера
     global CONFIGS

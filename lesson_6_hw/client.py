@@ -36,7 +36,7 @@ def handle_response(message):
             return f'400 : {message[CONFIGS.get("ERROR")]}'
     raise ValueError
 
-
+@log
 def create_presence_message(account_name):
     # def create_presence_message(account_name, CONFIGS):
     # создаём сообщение присутствия клиента
@@ -61,7 +61,7 @@ def create_presence_message(account_name):
     CLIENT_LOGGER.info('Создание сообщения отправки на сервер')
     return message
 
-
+@log
 def main():
     # блок запуска клиента
     global CONFIGS

@@ -94,7 +94,7 @@ def log(func):
 
     return wrapper
 
-
+# @log
 def load_configs(is_server=True):
     """Загрузка файла конфигурации"""
 
