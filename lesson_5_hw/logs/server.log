@@ -1,0 +1,3 @@
+2021-07-10 09:10:18,510 DEBUG server.py Start LOG write 
+2021-07-10 09:10:18,510 INFO server.py Сервер запущен на порту 7777, по адресу: 127.0.0.1. 
+2021-07-10 09:15:07,680 INFO server.py Обработка сообщения от клиента: {'action': 'presence', 'time': 1625890507.6793215, 'user': {'account_name': 'Guest'}} 

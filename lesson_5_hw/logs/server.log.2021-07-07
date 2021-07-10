@@ -1,0 +1,3 @@
+2021-07-06 22:26:44,040 CRITICAL server_config.py Кртиическое сообщение 
+2021-07-06 22:26:44,051 ERROR server_config.py Сообщение об ошибке 
+2021-07-06 22:26:44,051 WARNING server_config.py Предупреждение
