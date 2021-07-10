@@ -4,8 +4,8 @@ import socket
 import time
 # импорт стандартного модуля
 import logging
-# from logs import client_config
-import logs
+# импортируем объект logger для клиента, при этом не надо дополнительно прописывать объект-логгер в 19-й строке
+from logs.client_log_config import CLIENT_LOGGER
 # импорт пакета модулей логирования
 # from logs.client_config import CLIENT_LOGGER
 # импорт модуля utils
@@ -16,7 +16,7 @@ from utils import load_configs, get_message, send_message
 
 CONFIGS = dict()
 # Создаем объект-логгер с именем client:
-CLIENT_LOGGER = logging.getLogger('client')
+# CLIENT_LOGGER = logging.getLogger('client')
 
 # в дальнейшем вызываем:
 # CLIENT_LOGGER.critical('Кртиическое сообщение')
@@ -112,7 +112,7 @@ def main():
         transport.connect((server_address, server_port))  # привязываем клиента к IP-адресу и порту сервера
     except ConnectionRefusedError:
         # print('Вы ввели неверные данные для подключения!\nОбратитесь в службу поддержки.')
-        CLIENT_LOGGER.info('Клиент ввёл неверные данные для подключения!')
+        CLIENT_LOGGER.info(f'Клиент ввёл неверные данные для подключения! Сервер: {server_address}, порт: {server_port}')
         sys.exit(1)
 
     # msg_to_server = 'Сообщение для сервера'
@@ -139,4 +139,8 @@ def main():
 
 
 if __name__ == '__main__':
+    # Создаем объект-логгер с именем client:
+    # CLIENT_LOGGER = logging.getLogger('client')
+    CLIENT_LOGGER.debug('Начинаем сбор логов!')
     main()
+    CLIENT_LOGGER.debug('Заканчиваем сбор логов.')

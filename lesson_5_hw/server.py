@@ -3,14 +3,15 @@ import logging
 import os
 import sys
 import socket
-import logs
+# импортируем объект logger для клиента, при этом не надо дополнительно прописывать объект-логгер в 14-й строке
+from logs.server_log_config import SERVER_LOGGER
 # импорт модуля utils
 from utils import load_configs, get_message, send_message
 
 # объявдяем словарь для конфигурации
 CONFIGS = dict()
 # Создаем объект-логгер с именем client:
-SERVER_LOGGER = logging.getLogger('server')
+# SERVER_LOGGER = logging.getLogger('server')
 # SERVER_LOGGER = logs.server_config.logging.getLogger('server')
 # в дальнейшем вызываем:
 # SERVER_LOGGER.critical('Кртиическое сообщение')
@@ -102,4 +103,7 @@ def main():
 
 
 if __name__ == '__main__':
+    SERVER_LOGGER.debug('Start LOG write')
     main()
+    SERVER_LOGGER.debug('Close LOG write')
+
