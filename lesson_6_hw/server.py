@@ -16,7 +16,6 @@ CONFIGS = dict()
 # в дальнейшем вызываем:
 # SERVER_LOGGER.critical('Кртиическое сообщение')
 
-
 def handle_response(message):
     # def handle_response(message, CONFIGS):
     """Статус доставки сообщения"""
@@ -106,4 +105,3 @@ if __name__ == '__main__':
     SERVER_LOGGER.debug('Start LOG write')
     main()
     SERVER_LOGGER.debug('Close LOG write')
-

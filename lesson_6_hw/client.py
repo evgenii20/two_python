@@ -9,7 +9,7 @@ from logs.client_log_config import CLIENT_LOGGER
 # импорт пакета модулей логирования
 # from logs.client_config import CLIENT_LOGGER
 # импорт модуля utils
-from utils import load_configs, get_message, send_message
+from utils import load_configs, get_message, send_message, log
 
 # объявдяем константу типа словарь
 # from socket import socketpair
@@ -22,6 +22,7 @@ CONFIGS = dict()
 # CLIENT_LOGGER.critical('Кртиическое сообщение')
 # LOGGER
 
+@log
 def handle_response(message):
     """Статус доставки сообщения"""
     CLIENT_LOGGER.info('Обработка сообщения от сервера')
