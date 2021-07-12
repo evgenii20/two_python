@@ -11,8 +11,8 @@ import logging
 import logging.handlers
 import os
 import sys
-# импорт модуля utils
-# from lesson_5_hw.utils import load_configs
+# импорт модуля utils_old
+# from lesson_5_hw.utils_old import load_configs
 
 sys.path.append('../')
 

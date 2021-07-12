@@ -1,10 +1,15 @@
+import inspect
 import json
 import os
+import pickle
 import sys
+import time
+import traceback
 from functools import wraps
 
 from logs.server_log_config import SERVER_LOGGER
 from logs.client_log_config import CLIENT_LOGGER
+
 """
 def decorator_function(func):
     def wrapper():
@@ -14,7 +19,7 @@ def decorator_function(func):
         func()
         print('Выходим из обёртки')
     return wrapper
-    
+
 Здесь decorator_function() является функцией-декоратором. Как вы могли заметить, 
 она является функцией высшего порядка, так как принимает функцию в качестве аргумента, а 
 также возвращает функцию. Внутри decorator_function() мы определили другую функцию, обёртку, 
@@ -32,63 +37,78 @@ Hello world!
 Выходим из обёртки
 """
 
+# Определяем источник клиент или сервер
+if sys.argv[0].find('client') == -1:
+    # если не клиент то сервер!
+    # server_log = logging.getLogger('server')
+    # print(SERVER_LOGGER.getEffectiveLevel())
+    # SERVER_LOGGER.debug(f'Выполняем переключение на серверный лог:\n{SERVER_LOGGER.getEffectiveLevel()}')
+    SERVER_LOGGER.debug(f'Выполняем переключение на серверный лог:\n{SERVER_LOGGER.name}')
+else:
+    # client_log = logging.getLogger('client')
+    # print(CLIENT_LOGGER.getEffectiveLevel())
+    # CLIENT_LOGGER.debug(f'Выполняем переключение на лог клиента:\n{CLIENT_LOGGER.getEffectiveLevel()}')
+    CLIENT_LOGGER.debug(f'Выполняем переключение на лог клиента:\n{CLIENT_LOGGER.name}')
 
-# class log():
-#     ''' Фабрика декораторов-замедлителей
-#     '''
-#
-#     def __init__(self, timeout):
-#         # self.timeout = timeout
-#         pass
-#
-#     def __call__(self, func):
-#         ''' вызываем функцию
-#         '''
-#
-#         # @wraps(func)
-#         def decorated(*args, **kwargs):
-#             ''' Декорированная функция
-#             '''
-#             time.sleep(self.timeout)
-#             res = func(*args, **kwargs)
-#             print('Function {} was sleeping in class'.format(func.__name__))
-#             return res
-#
-#         return decorated
-# #-
+if SERVER_LOGGER:
+    name_log = SERVER_LOGGER
+else:
+    name_log = CLIENT_LOGGER
+
+class Log:
+    ''' Фабрика декораторов-замедлителей
+    '''
+
+    # def __init__(self, timeout):
+    #     # self.timeout = timeout
+    #     pass
+
+    def __call__(self, func):
+        ''' вызываем функцию
+        '''
+
+        def wrapper(*args, **kwargs):
+            # if SERVER_LOGGER:
+            #     name_log = SERVER_LOGGER
+            # else:
+            #     name_log = CLIENT_LOGGER
+            # print('Функция-обёртка!')
+            name_log.debug('Запущена Функция-обёртка!')
+            # print('Оборачиваемая функция: {}'.format(func))
+            name_log.debug('Выполняем обёрнутую функцию...')
+            r = func(*args, **kwargs)
+            name_log.debug(f'Оборачиваемая функция: {func.__name__}\n'
+                           f'\tс аргументами: {args}, {kwargs}.\n'
+                           f'Модуль: {func.__module__}.\n'
+                           f'Вызов из функции: {traceback.format_stack()[0].strip().split()[-1]}.\n'
+                           f'Вызов из: {inspect.stack()[1][3]}.')
+            # name_log.debug(f'Функция {func.__name__} вернула:\n{r}')
+            name_log.debug('Выходим из обёртки')
+            return r
+
+        return wrapper
+
 
 # На вход принимаем функцию
 def log(func):
-    # Определяем источник клиент или сервер
-    if sys.argv[0].find('client') == -1:
-        # если не клиент то сервер!
-        # server_log = logging.getLogger('server')
-        # print(SERVER_LOGGER.getEffectiveLevel())
-        # SERVER_LOGGER.debug(f'Выполняем переключение на серверный лог:\n{SERVER_LOGGER.getEffectiveLevel()}')
-        SERVER_LOGGER.debug(f'Выполняем переключение на серверный лог:\n{SERVER_LOGGER.name}')
-    else:
-        # client_log = logging.getLogger('client')
-        # print(CLIENT_LOGGER.getEffectiveLevel())
-        # CLIENT_LOGGER.debug(f'Выполняем переключение на лог клиента:\n{CLIENT_LOGGER.getEffectiveLevel()}')
-        CLIENT_LOGGER.debug(f'Выполняем переключение на лог клиента:\n{CLIENT_LOGGER.name}')
-
     # в функции обёртке принимаем аргументы
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if SERVER_LOGGER:
-            name_log = SERVER_LOGGER
-        else:
-            name_log = CLIENT_LOGGER
+        # if SERVER_LOGGER:
+        #     name_log = SERVER_LOGGER
+        # else:
+        #     name_log = CLIENT_LOGGER
         # print('Функция-обёртка!')
         name_log.debug('Запущена Функция-обёртка!')
         # print('Оборачиваемая функция: {}'.format(func))
-        name_log.debug(f'Оборачиваемая функция: {func.__name__} :'
-                       f'\n\tс позиционными\t{args} :'
-                       f'\n\tи именованными аргументами\t{kwargs}')
         name_log.debug('Выполняем обёрнутую функцию...')
-        # func()
         r = func(*args, **kwargs)
-        name_log.debug(f'Функция {func.__name__} вернула:\n{r}')
+        name_log.debug(f'Оборачиваемая функция: {func.__name__}\n'
+                       f'\tс аргументами: {args}, {kwargs}.\n'
+                       f'Модуль: {func.__module__}.\n'
+                       f'Вызов из функции: {traceback.format_stack()[0].strip().split()[-1]}.\n'
+                       f'Вызов из: {inspect.stack()[1][3]}.')
+        # name_log.debug(f'Функция {func.__name__} вернула:\n{r}')
         name_log.debug('Выходим из обёртки')
         return r
 
@@ -155,3 +175,16 @@ def send_message(opened_socket, message, CONFIGS):
     response = json_message.encode(CONFIGS.get('ENCODING'))
     # response = json_message.encode('utf-8')
     opened_socket.send(response)
+    # # response = json_message.encode('utf-8')
+    # response = pickle.dumps(message)
+    # opened_socket.send(response)
+
+# def messagess(msg, username):
+#     # msg = 'hello'
+#     return {
+#         'action': 'presence',
+#         'time': time.time(),
+#         'from': username,
+#         'encoding': 'utf-8',
+#         'message': msg,
+#     }
